@@ -1,12 +1,13 @@
 // src/components/CriarLogoView.tsx
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface CriarLogoViewProps {
-  onSubmit: (data: any) => void;
+  onSubmit: (data: any) => Promise<string>;
+  logoSrc?: string;//blob
 }
 
-const CriarLogoView: React.FC<CriarLogoViewProps> = ({ onSubmit }) => {
+const CriarLogoView: React.FC<CriarLogoViewProps> = ({ onSubmit, logoSrc }) => {
   const [formData, setFormData] = useState({
     tipoOrganizacao: '',
     ramoAtuacao: '',
@@ -14,6 +15,8 @@ const CriarLogoView: React.FC<CriarLogoViewProps> = ({ onSubmit }) => {
     cores: '',
     elementos: '',
   });
+
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -23,9 +26,21 @@ const CriarLogoView: React.FC<CriarLogoViewProps> = ({ onSubmit }) => {
     }));
   };
 
-  const handleSubmit = () => {
-    onSubmit(formData);
+  const handleSubmit = async () => {
+    try {
+      const imageUrl = await onSubmit(formData);
+      setImageSrc(imageUrl);
+    } catch (error) {
+      console.error('Erro ao criar a logo:', error);
+    }
   };
+
+  useEffect(() => {
+    if (logoSrc) {
+      // Se o logoSrc for fornecido, exiba a imagem
+      setImageSrc(logoSrc);
+    }
+  }, [logoSrc]);
 
   return (
     <div>
@@ -51,6 +66,11 @@ const CriarLogoView: React.FC<CriarLogoViewProps> = ({ onSubmit }) => {
         <input type="text" name="elementos" onChange={handleChange} />
       </div>
       <button onClick={handleSubmit}>Enviar</button>
+      <h1>Logo Gerada:</h1>
+      <div>
+        
+      {imageSrc && <img src={imageSrc} alt="Logo" />}
+      </div>
     </div>
   );
 };
