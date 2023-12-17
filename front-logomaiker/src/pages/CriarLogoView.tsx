@@ -1,6 +1,7 @@
 // src/components/CriarLogoView.tsx
 
 import React, { useEffect, useState } from 'react';
+import SolicitarEdicaoController from '../Components/SolicitarEdicaoController';
 
 interface CriarLogoViewProps {
   onSubmit: (data: any) => Promise<string>;
@@ -69,7 +70,7 @@ const CriarLogoView: React.FC<CriarLogoViewProps> = ({ onSubmit, logoSrc }) => {
       <h1>Logo Gerada:</h1>
       <div>
         
-      {imageSrc && <img src={imageSrc} alt="Logo" />}
+      {imageSrc && <SolicitarEdicaoController imagem={imageSrc}  />}
       </div>
     </div>
   );
