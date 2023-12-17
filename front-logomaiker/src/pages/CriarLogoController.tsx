@@ -28,7 +28,22 @@ const CriarLogoController: React.FC = () => {
         { headers }
       );
 
-      console.log(response);
+      console.log("chegamos no front", response.data);
+      const meuArray = Object.keys(response.data).map(chave => response.data[chave]);
+      console.log(meuArray);
+      const arr = new Uint8Array(meuArray);
+      const blobAux = new Blob([arr]);
+      console.log(blobAux);
+      console.log(URL.createObjectURL(blobAux));
+
+      const file = new File ( [blobAux], 'logo', {type: blobAux.type} )
+      readFile(blobAux)
+
+
+
+     
+      
+
 
       // Suponhamos que a URL da imagem esteja na propriedade 'imagem' da resposta
       const blob = response.data.imagem;
@@ -54,5 +69,19 @@ const CriarLogoController: React.FC = () => {
 
   return <CriarLogoView onSubmit={handleLogoCreate} logoSrc ={urlImg}  />;
 };
+
+
+async function readFile (file: Blob) {
+  console.log(file)
+  const fr = new FileReader ()
+  await fr.readAsDataURL(file)
+  console.log(fr.result)
+
+  setTimeout(function () {
+    console.log("foi", fr.result)
+  }, 20000)
+
+
+}
 
 export default CriarLogoController;
